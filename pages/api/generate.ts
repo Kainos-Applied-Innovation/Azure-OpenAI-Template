@@ -14,6 +14,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
 
+  const { method } = req;
+
+  if (method !== "POST") {
+    return res.status(400);
+  }
+
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });

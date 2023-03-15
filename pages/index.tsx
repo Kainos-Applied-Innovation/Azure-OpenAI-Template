@@ -24,7 +24,12 @@ export default function Home() {
   const generateQuestion = async () => {
     setGeneratingQuestion(true);
 
-    const resp = await fetch('/api/generate');
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
     setGeneratingQuestion(false);
     setShowAnswer(false);
