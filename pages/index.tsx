@@ -1,7 +1,8 @@
-import { RadioGroup } from '@headlessui/react';
+import { RadioGroup, Transition } from '@headlessui/react';
 import Head from 'next/head'
 import { useState } from 'react';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { ExamAnswers } from '@/components/ExamAnswers';
 
 interface GenerateResponse {
   question: string,
@@ -14,7 +15,6 @@ export default function Home() {
 
   const [generatingQuestion, setGeneratingQuestion] = useState(false);
   const [generatedResponse, setGeneratedResponse] = useState<GenerateResponse>();
-  const [selectedAnswer, setSelectedAnswer] = useState();
   const [showAnswer, setShowAnswer] = useState(false);
 
   const displayAnswer = () => {
@@ -55,13 +55,13 @@ export default function Home() {
                       Automatic Question Generation
                     </h1>
                     <p className="mt-6 text-lg leading-8 text-gray-600">
-                      Hit the generate button below, we'll use AI to generate a multi-choice question with one correct answer.
+                      Hit the generate button below, we will use AI to generate a multi-choice question with one correct answer.
                     </p>
                     <div className="mt-10 flex items-center gap-x-6">
                       {generatingQuestion ?
                         <button
                           type="button"
-                          className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                          className="rounded-md bg-indigo-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                           Generating...
                         </button>
@@ -78,76 +78,44 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-
               {generatedResponse &&
-                <div className="md:mx-auto md:max-w-2xl lg:mx-0 lg:mt-0 lg:w-screen">
-                  <div
-                    className="absolute inset-y-0 right-1/2 -z-10 -mr-10 w-[200%] skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 md:-mr-20 lg:-mr-36"
-                    aria-hidden="true"
-                  />
+                <Transition
+                  show={!!generatedResponse}
+                  enter="transition-opacity duration-75"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="transition-opacity duration-150"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <div className="md:mx-auto md:max-w-2xl lg:mx-0 lg:mt-0 lg:w-screen">
+                    <div
+                      className="absolute inset-y-0 right-1/2 -z-10 -mr-10 w-[200%] skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 md:-mr-20 lg:-mr-36"
+                      aria-hidden="true"
+                    />
 
-                  <div className="shadow-lg md:rounded-3xl">
-                    <div className="bg-indigo-500 flex flex-col items-center p-4 text-white [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
-                      <h2 className='font-semibold'>Question - {generatedResponse?.question}</h2>
+                    <div className="shadow-lg md:rounded-3xl">
+                      <div className="bg-indigo-500 flex flex-col items-center p-4 text-white [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
+                        <h2 className='font-semibold'>Question - {generatedResponse.question}</h2>
 
-                      <RadioGroup value={selectedAnswer} onChange={setSelectedAnswer} className='mt-4 w-full mx-2'>
-                        <RadioGroup.Label className="sr-only">Answer</RadioGroup.Label>
+                        <ExamAnswers answers={generatedResponse.answers} />
 
-                        <div className="space-y-2">
-                          {generatedResponse?.answers.map((answer: string, idx: number) => (
-                            <RadioGroup.Option
-                              key={idx}
-                              value={answer}
-                              className={({ active, checked }: { active: any, checked: any }) =>
-                                `${active
-                                  ? 'ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300'
-                                  : ''
-                                }
-                    ${checked ? 'bg-sky-900 bg-opacity-75 text-white' : 'bg-white'}
-                    relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`
-                              }
-                            >
-                              {({ active, checked }) => (
-                                <>
-                                  <div className="flex w-full items-center justify-between">
-                                    <div className="flex items-center">
-                                      <div className="text-sm">
-                                        <RadioGroup.Label
-                                          as="p"
-                                          className={`font-medium  ${checked ? 'text-white' : 'text-gray-900'
-                                            }`}
-                                        >
-                                          {answer}
-                                        </RadioGroup.Label>
-                                      </div>
-                                    </div>
-                                    {checked && (
-                                      <div className="shrink-0 text-white">
-                                        <CheckIcon className="h-6 w-6" />
-                                      </div>
-                                    )}
-                                  </div>
-                                </>
-                              )}
-                            </RadioGroup.Option>
-                          ))}
-                        </div>
-                      </RadioGroup>
-
-                      {showAnswer ?
-                        <p className='p-4 w-full bg-green-400 rounded-lg mt-2'>{generatedResponse?.correctAnswer}</p>
-                        :
-                        <button
-                          type='button'
-                          onClick={displayAnswer}
-                          className='bg-white text-slate-800 rounded-lg p-2 mt-2'>
-                          Show Answer
-                        </button>
-                      }
+                        {showAnswer ?
+                          <p className='p-4 w-full bg-green-400 rounded-lg mt-2'>{generatedResponse.correctAnswer}</p>
+                          :
+                          <button
+                            type='button'
+                            onClick={displayAnswer}
+                            className='bg-white text-slate-800 rounded-lg p-2 mt-2'>
+                            Show Answer
+                          </button>
+                        }
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Transition>
               }
+
             </div>
             <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
           </div>
