@@ -2,6 +2,7 @@ import { Transition } from '@headlessui/react';
 import Head from 'next/head'
 import { useState } from 'react';
 import { ExamAnswers } from '@/components/ExamAnswers';
+import Image from 'next/image';
 
 interface GenerateResponse {
   question: string,
@@ -54,6 +55,13 @@ export default function Home() {
             <div className="mx-auto max-w-7xl py-20 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-8">
               <div className="px-6 lg:px-0">
                 <div className="mx-auto max-w-2xl">
+                  <Image
+                    className='my-4'
+                    src={'/images/kainos_logo.webp'}
+                    width={128}
+                    height={128}
+                    alt={'Logo'} />
+
                   <div className="max-w-lg">
                     <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                       Automatic Question Generation
@@ -97,14 +105,14 @@ export default function Home() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="md:mx-auto md:max-w-2xl lg:mx-0 lg:mt-0 lg:w-screen mt-4">
+                  <div className="md:mx-auto md:max-w-2xl lg:mx-0 lg:mt-0 mt-4">
                     <div
                       className="absolute inset-y-0 right-1/2 -z-10 -mr-10 w-[200%] skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 md:-mr-20 lg:-mr-36"
                       aria-hidden="true"
                     />
 
-                    <div className="shadow-lg md:rounded-3xl">
-                      <div className="bg-indigo-500 flex flex-col items-center p-4 text-white [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
+                    <div className="shadow-lg md:rounded-3xl lg:mt-8">
+                      <div className="bg-indigo-500 mx-2 rounded-lg md:mx-0 flex flex-col items-center p-4 text-white [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
                         <h2 className='font-semibold'>Question - {generatedResponse.question}</h2>
 
                         <ExamAnswers answers={generatedResponse.answers} />
