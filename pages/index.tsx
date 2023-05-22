@@ -64,7 +64,7 @@ export default function Home() {
 
                   <div className="max-w-lg">
                     <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                      Automatic Question Generation
+                      Trivia Quiz 
                     </h1>
                     <p className="mt-6 text-lg leading-8 text-gray-600">
                       Hit the generate button below, we will use AI to generate a multi-choice question with one correct answer.
