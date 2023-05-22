@@ -4,9 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { Configuration, OpenAIApi } from "azure-openai";
 
 type Data = {
-  question: string,
-  answers: string[],
-  correctAnswer: string
+  question: string
 }
 
 export default async function handler(
@@ -32,11 +30,8 @@ export default async function handler(
 
   const messages: ChatMessage[] = [{
     role: 'system',
-    content: "I want you to generate a question for a trivia quiz " +
-      "You will generate a question with 4 potential answers, only one answer will be correct. " +
-      "You will return your response as a JSON object with the following structure: " +
-      "{ question: 'the question to ask', answers: ['potential answer a', potential answer b'], correctAnswer: 'the correct answer' }. " +
-      "Do not format the JSON object with newline characters"
+    // Edit your prompt below
+    content: "I want you to generate a question for a trivia quiz "
   }]
 
   const chatGPT = await openai.createChatCompletion({
@@ -44,13 +39,13 @@ export default async function handler(
     messages: messages as any
   })
 
+
+
   if (chatGPT.data.choices[0].message?.content) {
     try {
       const output = chatGPT.data.choices[0].message?.content;
       output.replaceAll("\n", "").replaceAll("\\", "");
-
-      const parsedOutput = JSON.parse(output);
-      return res.status(200).json(parsedOutput);
+      return res.status(200).json({question: output});
     } catch (err) {
       console.log(err);
       return res.status(500);
